@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MuéveteYa · Jardín de Eventos | ParkCode</title>
+  <style>
+    /* =====================================================================
+       1. VARIABLES DE DISEÑO Y RESET AUTÓNOMO (SIN DEPENDENCIAS EXTERNAS)
+       ===================================================================== */
+    :root {
+      --bg-body: #090d16;
+      --bg-card: #111827;
+      --bg-card-alt: #0d1320;
+      --bg-input: #070b12;
+      --border-subtle: #1f2937;
+      --border-strong: #374151;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --accent: #f59e0b;
+      --accent-light: #fbbf24;
+      --accent-dark: #b45309;
+      --green: #10b981;
+      --green-bg: rgba(16, 185, 129, 0.18);
+      --red: #ef4444;
+      --red-bg: rgba(239, 68, 68, 0.2);
+      --yellow: #f59e0b;
+      --yellow-bg: rgba(245, 158, 11, 0.24);
+      --blue: #3b82f6;
+      --blue-bg: rgba(59, 130, 246, 0.22);
+
+      /* Paleta elegante Blanco / Beige / Dorado / Hueso para Auth */
+      --auth-bg: linear-gradient(155deg, #faf7f2 0%, #f3ece0 52%, #e9dec8 100%);
+      --auth-surface: #fffdf9;
+      --auth-surface-alt: #f7f1e5;
+      --auth-border: #dfd1b5;
+      --auth-gold: #b88b1e;
+      --auth-gold-bright: #d4a738;
+      --auth-gold-dark: #8a6510;
+      --auth-text: #2c2419;
+      --auth-text-muted: #6e5e49;
+
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-card: 0 10px 28px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.45;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 32px;
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* =====================================================================
+       1B. PANTALLA DE INICIO DE SESIÓN / REGISTRO (BLANCO, BEIGE, DORADO, HUESO)
+       ===================================================================== */
+    .auth-screen {
+      min-height: 100vh;
+      background: var(--auth-bg);
+      color: var(--auth-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--auth-surface);
+      border: 1px solid var(--auth-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(74, 55, 20, 0.14);
+      overflow: hidden;
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, #fffdf9 0%, #f5ede0 100%);
+      border-bottom: 1px solid var(--auth-border);
+      padding: 22px 20px 18px;
+      text-align: center;
+    }
+
+    .auth-badge {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 10px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--auth-gold-bright), var(--auth-gold-dark));
+      color: #fffdf9;
+      font-weight: 900;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(184, 139, 30, 0.28);
+    }
+
+    .auth-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--auth-text);
+    }
+
+    .auth-subtitle {
+      font-size: 12px;
+      color: var(--auth-text-muted);
+      margin-top: 4px;
+    }
+
+    .auth-gold-line {
+      height: 3px;
+      width: 72px;
+      margin: 12px auto 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, var(--auth-gold), transparent);
+    }
+
+    .auth-body {
+      padding: 20px;
+    }
+
+    .auth-mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      background: var(--auth-surface-alt);
+      padding: 5px;
+      border-radius: 14px;
+      border: 1px solid var(--auth-border);
+      margin-bottom: 16px;
+    }
+
+    .auth-mode-btn {
+      border: none;
+      background: transparent;
+      color: var(--auth-text-muted);
+      padding: 9px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .auth-mode-btn.active {
+      background: linear-gradient(135deg, var(--auth-gold-bright), var(--auth-gold));
+      color: #fffdf9;
+      box-shadow: 0 4px 12px rgba(184, 139, 30, 0.25);
+    }
+
+    .auth-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--auth-text);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .auth-input, .auth-select {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #d7c7a9;
+      border-radius: 11px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--auth-text);
+      outline: none;
+    }
+
+    .auth-input:focus, .auth-select:focus {
+      border-color: var(--auth-gold);
+      box-shadow: 0 0 0 3px rgba(184, 139, 30, 0.14);
+    }
+
+    .password-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-wrap .auth-input {
+      padding-right: 42px;
+    }
+
+    .toggle-pass-btn {
+      position: absolute;
+      right: 8px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 4px 6px;
+      color: var(--auth-gold-dark);
+      line-height: 1;
+    }
+
+    .auth-btn-gold {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--auth-gold-bright), var(--auth-gold-dark));
+      color: #fffdf9;
+      box-shadow: 0 6px 18px rgba(184, 139, 30, 0.28);
+      transition: transform 0.12s ease;
+    }
+
+    .auth-btn-gold:active {
+      transform: scale(0.98);
+    }
+
+    .auth-hint-box {
+      margin-top: 16px;
+      background: var(--auth-surface-alt);
+      border: 1px solid var(--auth-border);
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 11px;
+      color: var(--auth-text-muted);
+    }
+
+    .auth-hint-title {
+      font-weight: 800;
+      color: var(--auth-gold-dark);
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+
+    /* =====================================================================
+       2. CABECERA Y BARRA DE SESIÓN / PANEL ACTIVO
+       ===================================================================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(11, 16, 27, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 14px;
+    }
+
+    .topbar-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
+      color: #090d16;
+      font-weight: 900;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .client-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--accent-light);
+      border: 1px solid rgba(245, 158, 11, 0.38);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .brand-sub strong {
+      color: var(--accent-light);
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .db-quick-btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .db-quick-btn:active {
+      transform: scale(0.97);
+    }
+
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.16);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .logout-btn:active {
+      transform: scale(0.97);
+    }
+
+    .session-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #090d16;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    .session-badge {
+      background: rgba(245, 158, 11, 0.18);
+      color: var(--accent-light);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* =====================================================================
+       3. CONTENEDOR PRINCIPAL Y GRID RESPONSIVO
+       ===================================================================== */
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 16px 14px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kpi-card.alert-kpi {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), var(--bg-card));
+      border-color: rgba(245, 158, 11, 0.45);
+    }
+
+    @media (min-width: 768px) {
+      .kpi-card.alert-kpi {
+        grid-column: span 1;
+      }
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1.25fr 0.95fr;
+        align-items: start;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      padding: 14px;
+    }
+
+    /* =====================================================================
+       4. MAPA AÉREO INTERACTIVO ("JARDÍN DE EVENTOS")
+       ===================================================================== */
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #d1d5db;
+    }
+
+    .legend-box {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    .aerial-wrapper {
+      background: #252830;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      border: 2px solid #4b5563;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .venue-facade {
+      background: linear-gradient(180deg, #171412 0%, #26211d 100%);
+      border-bottom: 4px solid #064e3b;
+      padding: 10px 12px 12px;
+      text-align: center;
+    }
+
+    .fairy-lights {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 8px;
+    }
+
+    .bulb {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fef08a;
+      box-shadow: 0 0 8px 2px rgba(251, 191, 36, 0.9);
+    }
+
+    .facade-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .garden-side {
+      font-size: 11px;
+      color: #6ee7b7;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .venue-sign {
+      background: #141210;
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      border-radius: 12px;
+      padding: 8px 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    .venue-neon {
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fcd34d;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.85);
+    }
+
+    .venue-sub {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #a8a29e;
+      margin-top: 2px;
+    }
+
+    .lot-body {
+      display: grid;
+      grid-template-columns: 1fr 0.95fr 1fr;
+      gap: 8px;
+      padding: 12px 10px;
+    }
+
+    .wing-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .wing-header {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #d1d5db;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+    }
+
+    .hatched-box {
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.22),
+        rgba(255, 255, 255, 0.22) 6px,
+        rgba(17, 24, 39, 0.55) 6px,
+        rgba(17, 24, 39, 0.55) 12px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hatched-label {
+      background: rgba(15, 23, 42, 0.88);
+      color: #e5e7eb;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .center-lane {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 1px dashed rgba(255, 255, 255, 0.25);
+      border-right: 1px dashed rgba(255, 255, 255, 0.25);
+      padding: 4px 6px;
+    }
+
+    .road-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .double-park-zone {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      border-radius: 12px;
+      padding: 7px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin: 6px 0;
+    }
+
+    .dp-title {
+      font-size: 9px;
+      font-weight: 800;
+      color: #fbbf24;
+      text-transform: uppercase;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .spot-btn {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid #4b5563;
+      padding: 7px 7px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-height: 56px;
+      position: relative;
+    }
+
+    .spot-btn:active {
+      transform: scale(0.97);
+    }
+
+    .spot-btn.selected {
+      box-shadow: 0 0 0 2px #ffffff, 0 6px 16px rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
+
+    .spot-disponible {
+      background: var(--green-bg);
+      border-color: var(--green);
+    }
+
+    .spot-ocupado {
+      background: var(--red-bg);
+      border-color: var(--red);
+    }
+
+    .spot-atencion {
+      background: var(--yellow-bg);
+      border-color: var(--yellow);
+    }
+
+    .spot-asignado {
+      background: var(--blue-bg);
+      border-color: var(--blue);
+    }
+
+    .spot-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .spot-id {
+      font-size: 10px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 5px;
+      color: #090d16;
+    }
+
+    .bg-green { background: var(--green); }
+    .bg-red { background: var(--red); color: #fff; }
+    .bg-yellow { background: var(--yellow); }
+    .bg-blue { background: var(--blue); color: #fff; }
+
+    .spot-status-txt {
+      font-size: 9px;
+      font-weight: 700;
+      color: #f3f4f6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .spot-car-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .plate-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .car-color-txt {
+      font-size: 9px;
+      color: #d1d5db;
+    }
+
+    .lot-footer {
+      background: #111827;
+      border-top: 1px solid #374151;
+      padding: 7px 12px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       5. BOTONES, FORMULARIOS, INSPECTOR Y SIMULADOR SMS
+       ===================================================================== */
+    .btn {
+      border: none;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s ease, transform 0.12s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .btn-amber {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      color: #090d16;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #062419;
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+      color: #f9fafb;
+      border: 1px solid #374151;
+    }
+
+    .btn-sm {
+      padding: 7px 10px;
+      font-size: 11px;
+      border-radius: 8px;
+    }
+
+    .status-btn-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    @media (min-width: 480px) {
+      .status-btn-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .info-box {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      gap: 8px;
+    }
+
+    .info-row span:first-child {
+      color: var(--text-muted);
+    }
+
+    .info-row strong {
+      color: var(--text-main);
+      text-align: right;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 11px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .req-card {
+      background: var(--bg-card-alt);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .req-card.critical {
+      border-color: var(--red);
+      background: rgba(127, 29, 29, 0.25);
+    }
+
+    .sms-bubble {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 12px;
+      color: #f1f5f9;
+    }
+
+    .sms-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--accent-light);
+      margin-bottom: 4px;
+    }
+
+    .phone-frame {
+      max-width: 380px;
+      margin: 0 auto;
+      background: #060911;
+      border: 3px solid #334155;
+      border-radius: 28px;
+      padding: 14px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .phone-notch {
+      width: 64px;
+      height: 5px;
+      background: #334155;
+      border-radius: 999px;
+      margin: 0 auto 10px;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 12px;
+    }
+
+    .log-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-light);
+      margin-bottom: 3px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(0, 0, 0, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 920px;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .confirm-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .db-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 14px;
+      background: #090d16;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .db-tab-btn {
+      background: #1f2937;
+      color: #d1d5db;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .db-tab-btn.active {
+      background: var(--accent);
+      color: #090d16;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      padding: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    th {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: #e5e7eb;
+    }
+
+    .toast-banner {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 80;
+      background: #1e293b;
+      border: 1px solid var(--accent);
+      color: #ffffff;
+      padding: 11px 16px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+      max-width: 92vw;
+      text-align: center;
+      animation: fadeUp 0.2s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER FLOTANTE DE NOTIFICACIONES -->
+  <div id="toast-box" class="toast-banner hidden"></div>
+
+  <!-- =====================================================================
+       PANTALLA DE INICIO DE SESIÓN / REGISTRO (BLANCO, BEIGE, DORADO, HUESO)
+       ===================================================================== -->
+  <section id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-badge">MY</div>
+        <h1 class="auth-title">MuéveteYa · Jardín de Eventos</h1>
+        <p class="auth-subtitle">Acceso Inteligente · <strong>ParkCode</strong></p>
+        <div class="auth-gold-line"></div>
+      </div>
+
+      <div class="auth-body">
+        <div class="auth-mode-tabs">
+          <button type="button" id="mode-login-btn" class="auth-mode-btn active" onclick="setAuthMode('login')">
+            Iniciar Sesión
+          </button>
+          <button type="button" id="mode-register-btn" class="auth-mode-btn" onclick="setAuthMode('register')">
+            Registrarse (Conductor)
+          </button>
+        </div>
+
+        <!-- FORMULARIO INICIAR SESIÓN -->
+        <form id="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="auth-label" for="login-identifier">Correo electrónico o Teléfono</label>
+            <input
+              id="login-identifier"
+              type="text"
+              class="auth-input"
+              placeholder="Ej. carlos@invitado.com o 5510002001"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="auth-label" for="login-password">Contraseña</label>
+            <div class="password-wrap">
+              <input
+                id="login-password"
+                type="password"
+                class="auth-input"
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-pass-btn"
+                onclick="togglePasswordVisibility('login-password', this)"
+                aria-label="Mostrar u ocultar contraseña"
+              >👁️</button>
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn-gold">Entrar a mi Panel</button>
+        </form>
+
+        <!-- FORMULARIO REGISTRO CONDUCTOR -->
+        <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label class="auth-label" for="reg-name">Nombre completo</label>
+            <input id="reg-name" type="text" class="auth-input" placeholder="Ej. Mariana Ortega" required />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="auth-label" for="reg-phone">Teléfono SMS</label>
+              <input id="reg-phone" type="text" class="auth-input" placeholder="5512349876" required />
+            </div>
+            <div class="form-group">
+              <label class="auth-label" for="reg-email">Correo (opcional)</label>
+              <input id="reg-email" type="email" class="auth-input" placeholder="mariana@correo.com" />
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="auth-label" for="reg-plate">Placa vehicular</label>
+              <input id="reg-plate" type="text" class="auth-input" placeholder="JKL-442-A" required />
+            </div>
+            <div class="form-group">
+              <label class="auth-label" for="reg-password">Crear contraseña</label>
+              <div class="password-wrap">
+                <input id="reg-password" type="password" class="auth-input" placeholder="Tu contraseña" required />
+                <button
+                  type="button"
+                  class="toggle-pass-btn"
+                  onclick="togglePasswordVisibility('reg-password', this)"
+                  aria-label="Mostrar u ocultar contraseña"
+                >👁️</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="auth-label" for="reg-model">Auto / Modelo</label>
+              <input id="reg-model" type="text" class="auth-input" placeholder="Mazda 3" required />
+            </div>
+            <div class="form-group">
+              <label class="auth-label" for="reg-color">Color</label>
+              <input id="reg-color" type="text" class="auth-input" placeholder="Blanco Perla" required />
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn-gold">Registrarme e Ir al Panel de Conductor</button>
+        </form>
+
+        <div class="auth-hint-box">
+          <div class="auth-hint-title">Claves para Demostración</div>
+          <div><strong>Cajón C1 (Carlos Mendoza):</strong> <code>carlos@invitado.com</code> / <code>1234</code></div>
+          <div><strong>Cajón C2 (Valeria Ríos):</strong> <code>valeria@invitado.com</code> / <code>1234</code></div>
+          <div style="margin-top:4px;"><strong>Encargado Parquímetro:</strong> <code>parquimetro@mueveteya.com</code> / <code>Park2026#</code></div>
+          <div><strong>Administrador Sitio:</strong> <code>admin@mueveteya.com</code> / <code>Admin2026#</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       APLICACIÓN PRINCIPAL
+       ===================================================================== -->
+  <div id="app-shell" class="hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-row">
+          <div class="brand-left">
+            <div class="logo-badge">MY</div>
+            <div class="brand-title-wrap">
+              <div class="brand-title">
+                <span>MuéveteYa</span>
+                <span id="header-client-name" class="client-pill">Jardín de Eventos</span>
+              </div>
+              <div class="brand-sub">Estacionamiento Inteligente · <strong>ParkCode</strong></div>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <button type="button" class="db-quick-btn" onclick="openDbModal()">
+              <span>🗄️</span>
+              <span>Base de Datos</span>
+            </button>
+            <button type="button" class="logout-btn" onclick="requestLogout()">
+              <span>🚪</span>
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="session-strip">
+          <div>
+            Sesión activa: <strong id="session-user-label">-</strong>
+          </div>
+          <span id="session-role-badge" class="session-badge">PANEL</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+
+      <!-- PANEL 1: ENCARGADO DEL PARQUÍMETRO -->
+      <section id="view-attendant" class="hidden">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-label">Disponibles</div>
+              <div id="kpi-disponible" class="kpi-val" style="color: var(--green);">2</div>
+            </div>
+            <span class="dot" style="background: var(--green);"></span>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-label">Ocupados</div>
+              <div id="kpi-ocupado" class="kpi-val" style="color: var(--red);">8</div>
+            </div>
+            <span class="dot" style="background: var(--red);"></span>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-label">Bloqueo / Atención</div>
+              <div id="kpi-atencion" class="kpi-val" style="color: var(--yellow);">2</div>
+            </div>
+            <span class="dot" style="background: var(--yellow);"></span>
+          </div>
+          <div class="kpi-card">
+            <div>
+              <div class="kpi-label">Asignados</div>
+              <div id="kpi-asignado" class="kpi-val" style="color: var(--blue);">0</div>
+            </div>
+            <span class="dot" style="background: var(--blue);"></span>
+          </div>
+          <div class="kpi-card alert-kpi">
+            <div>
+              <div class="kpi-label">Solicitudes SMS Activas</div>
+              <div id="kpi-solicitudes" class="kpi-val" style="color: #fff;">1</div>
+            </div>
+            <button type="button" class="btn btn-amber btn-sm" onclick="scrollToSms()">Ver SMS</button>
+          </div>
+        </div>
+
+        <div class="main-grid">
+          <div id="attendant-map-slot"></div>
+
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">🚘 Detalle del Espacio Seleccionado</div>
+                <span id="inspector-spot-pill" class="client-pill">C1</span>
+              </div>
+              <div class="card-body" id="inspector-body"></div>
+            </div>
+
+            <div class="card" id="sms-center-card" style="border-color: rgba(245, 158, 11, 0.45);">
+              <div class="card-header">
+                <div class="card-title">📲 Solicitudes de Movimiento y SMS</div>
+                <span style="font-size:11px; color:var(--accent-light); font-weight:700;">Ciclo 5 min</span>
+              </div>
+              <div class="card-body" id="sms-requests-body"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">📋 Historial de Actividades</div>
+                <span style="font-size:11px; color:var(--text-muted);">Tiempo real</span>
+              </div>
+              <div class="card-body">
+                <div id="history-feed" class="log-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: CONDUCTOR -->
+      <section id="view-driver" class="hidden">
+        <div class="main-grid">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div id="driver-map-slot"></div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">💬 Bandeja del Sistema SMS</div>
+                <span id="twilio-status-badge" style="font-size:11px; color:var(--accent-light); font-weight:700;">SMS Listo</span>
+              </div>
+              <div class="card-body">
+                <div id="driver-sms-inbox" class="log-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">🎟️ Portal del Conductor · Invitados</div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label" for="driver-selector">Conductor activo:</label>
+                  <select id="driver-selector" class="form-control" onchange="changeActiveDriver(this.value)"></select>
+                </div>
+
+                <div id="driver-active-summary" class="info-box"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">📱 Solicitud de Movimiento por SMS</div>
+              </div>
+              <div class="card-body">
+                <div class="phone-frame">
+                  <div class="phone-notch"></div>
+                  <div class="form-group">
+                    <label class="form-label" for="sms-target-select">Vehículo / Cajón a mover o consultar:</label>
+                    <select id="sms-target-select" class="form-control"></select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="sms-custom-text">Mensaje SMS a enviar:</label>
+                    <input
+                      id="sms-custom-text"
+                      type="text"
+                      class="form-control"
+                      placeholder="Ej. MOVER AUTO por favor, salgo en 2 min"
+                    />
+                  </div>
+
+                  <button type="button" class="btn btn-amber btn-block" onclick="driverSendSmsRequest()">
+                    📩 Enviar Solicitud por SMS
+                  </button>
+
+                  <div style="margin-top:12px;" id="driver-last-sms-box"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 3: ADMINISTRADOR DEL SITIO -->
+      <section id="view-admin" class="hidden">
+        <div class="main-grid">
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">🔐 Editar Contraseñas de Usuarios y Roles</div>
+                <span class="client-pill">Olvido de Contraseña</span>
+              </div>
+              <div class="card-body">
+                <form id="admin-password-form" onsubmit="adminUpdatePassword(event)">
+                  <div class="form-group">
+                    <label class="form-label" for="admin-user-select">Seleccionar usuario / cuenta:</label>
+                    <select id="admin-user-select" class="form-control" onchange="syncSelectedAdminUser()"></select>
+                  </div>
+
+                  <div class="info-box" style="margin-bottom:12px;" id="admin-selected-user-info"></div>
+
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-new-password">Nueva contraseña</label>
+                      <input
+                        id="admin-new-password"
+                        type="text"
+                        class="form-control"
+                        placeholder="Escribe la nueva contraseña"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="admin-confirm-password">Confirmar contraseña</label>
+                      <input
+                        id="admin-confirm-password"
+                        type="text"
+                        class="form-control"
+                        placeholder="Repite la contraseña"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-amber btn-block">
+                    💾 Guardar Nueva Contraseña
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">🔌 Conexión Twilio SMS (Webhook)</div>
+                <span style="font-size:11px; color:var(--accent-light); font-weight:700;">API SMS</span>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="form-label" for="twilio-webhook-url">URL de tu backend Twilio (opcional)</label>
+                  <input
+                    id="twilio-webhook-url"
+                    type="text"
+                    class="form-control"
+                    placeholder="Ej. http://localhost:3001/api/send-sms"
+                  />
+                </div>
+                <button type="button" class="btn btn-dark btn-sm" onclick="saveTwilioWebhook()">
+                  Guardar URL Twilio
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">📡 Monitor Global de Mensajes SMS</div>
+                <span style="font-size:11px; color:var(--green); font-weight:700;">Servicio Operativo</span>
+              </div>
+              <div class="card-body">
+                <div id="admin-sms-feed" class="log-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">👥 Cuentas Registradas en el Sistema</div>
+              </div>
+              <div class="card-body" style="padding:0;">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Rol</th>
+                        <th>Acceso</th>
+                        <th>Contraseña</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-users-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div id="admin-map-slot"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- TARJETA REUTILIZABLE DEL MAPA AÉREO -->
+  <div id="shared-map-card" class="card hidden">
+    <div class="card-header">
+      <div class="card-title">
+        <span>📍 Mapa Aéreo en Tiempo Real</span>
+      </div>
+      <div class="legend-bar">
+        <span class="legend-item"><span class="legend-box" style="background: var(--green);"></span>Disponible</span>
+        <span class="legend-item"><span class="legend-box" style="background: var(--red);"></span>Ocupado</span>
+        <span class="legend-item"><span class="legend-box" style="background: var(--yellow);"></span>Atención</span>
+        <span class="legend-item"><span class="legend-box" style="background: var(--blue);"></span>Asignado</span>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="aerial-wrapper">
+        <div class="venue-facade">
+          <div class="fairy-lights">
+            <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+            <span class="bulb"></span><span class="bulb"></span><span class="bulb"></span>
+            <span class="bulb"></span><span class="bulb"></span>
+          </div>
+          <div class="facade-grid">
+            <div class="garden-side">
+              <span style="font-size: 18px;">🌳</span>
+              <span>Jardín Oeste</span>
+            </div>
+            <div class="venue-sign">
+              <div id="map-venue-name" class="venue-neon">Jardín de Eventos</div>
+              <div class="venue-sub">Entrada Principal Salón</div>
+            </div>
+            <div class="garden-side">
+              <span style="font-size: 18px;">🌴</span>
+              <span>Palmera Norte</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lot-body">
+          <div class="wing-col">
+            <div class="wing-header">
+              <span>Ala Oeste (A)</span>
+              <span>5</span>
+            </div>
+            <div id="col-a-list" style="display:flex; flex-direction:column; gap:7px;"></div>
+          </div>
+
+          <div class="center-lane">
+            <div class="road-arrow">
+              <span style="font-size: 18px; line-height: 1;">⬆</span>
+              <span>Acceso</span>
+            </div>
+
+            <div class="double-park-zone">
+              <div class="dp-title">⚠️ Paso Central (Doble Fila)</div>
+              <div id="col-c-list" style="display:flex; flex-direction:column; gap:7px;"></div>
+            </div>
+
+            <div class="road-arrow">
+              <span>Salida</span>
+              <span style="font-size: 18px; line-height: 1;">⬇</span>
+            </div>
+          </div>
+
+          <div class="wing-col">
+            <div class="hatched-box">
+              <span class="hatched-label">Zona Prohibida</span>
+            </div>
+            <div class="wing-header">
+              <span>Ala Este (B)</span>
+              <span>5</span>
+            </div>
+            <div id="col-b-list" style="display:flex; flex-direction:column; gap:7px;"></div>
+          </div>
+        </div>
+
+        <div class="lot-footer">
+          <span>🌿 Jardín Sur-Oeste</span>
+          <span>Acceso Vehicular</span>
+          <span>Jardín Sur-Este 🌿</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px; flex-wrap:wrap;">
+        <span style="font-size:11px; color:var(--text-muted);">Toca cualquier cajón o auto en el mapa para gestionarlo.</span>
+        <button type="button" class="btn btn-dark btn-sm" onclick="resetPrototype()">Restaurar foto inicial</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMACIÓN DE CERRAR SESIÓN -->
+  <div id="logout-modal" class="modal-backdrop hidden">
+    <div class="confirm-box">
+      <div style="font-size:16px; font-weight:800; margin-bottom:8px;">🚪 Cerrar sesión</div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">
+        ¿De verdad quieres cerrar sesión? Regresarás a la pantalla de inicio de sesión y registro.
+      </p>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn btn-dark" onclick="closeLogoutModal()">Cancelar</button>
+        <button type="button" class="btn btn-amber" onclick="confirmLogout()">Sí, cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BASE DE DATOS -->
+  <div id="db-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="card-header">
+        <div class="card-title">🗄️ Base de Datos en Vivo · ParkCode</div>
+        <button type="button" class="btn btn-dark btn-sm" onclick="closeDbModal()">Cerrar</button>
+      </div>
+      <div class="db-tabs">
+        <button type="button" id="dbtab-spots" class="db-tab-btn active" onclick="setDbTab('spots')">Cajones</button>
+        <button type="button" id="dbtab-requests" class="db-tab-btn" onclick="setDbTab('requests')">Solicitudes SMS</button>
+        <button type="button" id="dbtab-sms_logs" class="db-tab-btn" onclick="setDbTab('sms_logs')">Mensajes SMS</button>
+        <button type="button" id="dbtab-users" class="db-tab-btn" onclick="setDbTab('users')">Usuarios</button>
+        <button type="button" id="dbtab-logs" class="db-tab-btn" onclick="setDbTab('logs')">Historial</button>
+      </div>
+      <div class="table-wrap" id="db-table-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "mueveteya_parkcode_v3";
+
+    function createInitialState() {
+      return {
+        session: null,
+        selectedSpotId: "C1",
+        activeDriverId: "drv_1",
+        activeDbTab: "spots",
+        venueName: "Jardín de Eventos",
+        twilioWebhookUrl: "",
+        users: [
+          {
+            id: "usr_attendant",
+            name: "Encargado de Parquímetro",
+            role: "attendant",
+            email: "parquimetro@mueveteya.com",
+            phone: "5510000001",
+            password: "Park2026#"
+          },
+          {
+            id: "usr_admin",
+            name: "Administrador del Sitio",
+            role: "admin",
+            email: "admin@mueveteya.com",
+            phone: "5510000002",
+            password: "Admin2026#"
+          },
+          {
+            id: "drv_1",
+            name: "Carlos Mendoza (Cajón C1)",
+            role: "driver",
+            email: "carlos@invitado.com",
+            phone: "5510002001",
+            password: "1234",
+            plate: "ABC-123-X",
+            car: "Nissan Versa",
+            color: "Gris"
+          },
+          {
+            id: "drv_2",
+            name: "Valeria Ríos (Cajón C2)",
+            role: "driver",
+            email: "valeria@invitado.com",
+            phone: "5510002002",
+            password: "1234",
+            plate: "DEF-456-Y",
+            car: "VW Jetta",
+            color: "Blanco"
+          }
+        ],
+        spots: [
+          { id: "A1", wing: "A", status: "ocupado", plate: "TX-810-A", car: "Toyota Corolla", color: "Plata", driverName: "Invitado A1", phone: "5511000001" },
+          { id: "A2", wing: "A", status: "ocupado", plate: "MX-304-B", car: "Honda Civic", color: "Azul", driverName: "Invitado A2", phone: "5511000002" },
+          { id: "A3", wing: "A", status: "disponible", plate: "", car: "", color: "", driverName: "", phone: "" },
+          { id: "A4", wing: "A", status: "ocupado", plate: "CD-912-C", car: "Mazda CX-5", color: "Rojo", driverName: "Invitado A4", phone: "5511000004" },
+          { id: "A5", wing: "A", status: "atencion", plate: "ED-552-D", car: "Chevrolet Aveo", color: "Blanco", driverName: "Invitado A5", phone: "5511000005" },
+
+          { id: "C1", wing: "C", status: "atencion", plate: "ABC-123-X", car: "Nissan Versa", color: "Gris", driverName: "Carlos Mendoza (Cajón C1)", phone: "5510002001" },
+          { id: "C2", wing: "C", status: "ocupado", plate: "DEF-456-Y", car: "VW Jetta", color: "Blanco", driverName: "Valeria Ríos (Cajón C2)", phone: "5510002002" },
+
+          { id: "B1", wing: "B", status: "ocupado", plate: "FG-201-E", car: "Hyundai Elantra", color: "Gris", driverName: "Invitado B1", phone: "5512000001" },
+          { id: "B2", wing: "B", status: "ocupado", plate: "HI-619-F", car: "Seat Ibiza", color: "Amarillo", driverName: "Invitado B2", phone: "5512000002" },
+          { id: "B3", wing: "B", status: "disponible", plate: "", car: "", color: "", driverName: "", phone: "" },
+          { id: "B4", wing: "B", status: "ocupado", plate: "JK-744-G", car: "Ford Focus", color: "Azul Marino", driverName: "Invitado B4", phone: "5512000004" },
+          { id: "B5", wing: "B", status: "ocupado", plate: "LM-880-H", car: "Nissan Sentra", color: "Plata", driverName: "Invitado B5", phone: "5512000005" }
+        ],
+        requests: [
+          {
+            id: "REQ-101",
+            spotId: "C1",
+            plate: "ABC-123-X",
+            driverName: "Carlos Mendoza (Cajón C1)",
+            phone: "5510002001",
+            message: "Por favor mover Versa Gris en doble fila C1 para salida.",
+            createdAt: nowTime(),
+            minutesElapsed: 1,
+            escalated: false,
+            status: "pendiente"
+          }
+        ],
+        smsLogs: [
+          {
+            id: "SMS-1",
+            direction: "ENTRANTE",
+            from: "5510002001",
+            to: "MuéveteYa SMS",
+            text: "Por favor mover Versa Gris en doble fila C1 para salida.",
+            time: nowTime(),
+            deliveryStatus: "Recibido"
+          },
+          {
+            id: "SMS-2",
+            direction: "SALIENTE",
+            from: "MuéveteYa SMS",
+            to: "5510002001",
+            text: "Alerta MuéveteYa: Se ha registrado tu solicitud para el cajón C1 (Placa ABC-123-X).",
+            time: nowTime(),
+            deliveryStatus: "Listo SMS"
+          }
+        ],
+        logs: [
+          { id: "LOG-1", time: nowTime(), actor: "Sistema SMS", text: "Solicitud REQ-101 activa para placa ABC-123-X en cajón C1." },
+          { id: "LOG-2", time: nowTime(), actor: "Jardín de Eventos", text: "Mapa aéreo inicial cargado (12 espacios totales)." }
+        ]
+      };
+    }
+
+    function nowTime() {
+      const d = new Date();
+      return d.toTimeString().slice(0, 5);
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createInitialState();
+        return { ...createInitialState(), ...JSON.parse(raw) };
+      } catch (e) {
+        return createInitialState();
+      }
+    }
+
+    let state = loadState();
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById("toast-box");
+      box.textContent = msg;
+      box.classList.remove("hidden");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        box.classList.add("hidden");
+      }, 3200);
+    }
+
+    function addLog(actor, text) {
+      state.logs.unshift({
+        id: "LOG-" + Date.now() + "-" + Math.floor(Math.random() * 99),
+        time: nowTime(),
+        actor,
+        text
+      });
+      if (state.logs.length > 60) state.logs.pop();
+    }
+
+    async function dispatchSms({ direction = "SALIENTE", from, to, text }) {
+      let deliveryStatus = direction === "SALIENTE" ? "Registrado SMS" : "Recibido SMS";
+
+      if (direction === "SALIENTE" && state.twilioWebhookUrl && to) {
+        try {
+          const resp = await fetch(state.twilioWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ to, body: text })
+          });
+          if (resp.ok) {
+            deliveryStatus = "Enviado Twilio SMS";
+          } else {
+            deliveryStatus = "Error Twilio (ver log)";
+          }
+        } catch (err) {
+          deliveryStatus = "Sin red Twilio (local)";
+        }
+      }
+
+      const sms = {
+        id: "SMS-" + Date.now() + "-" + Math.floor(Math.random() * 99),
+        direction,
+        from,
+        to,
+        text,
+        time: nowTime(),
+        deliveryStatus
+      };
+      state.smsLogs.unshift(sms);
+      if (state.smsLogs.length > 80) state.smsLogs.pop();
+      return sms;
+    }
+
+    /* =====================================================================
+       VER / OCULTAR CONTRASEÑA
+       ===================================================================== */
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      btn.textContent = isPassword ? "🙈" : "👁️";
+    }
+
+    /* =====================================================================
+       AUTENTICACIÓN Y CIERRE DE SESIÓN
+       ===================================================================== */
+    function setAuthMode(mode) {
+      const loginForm = document.getElementById("login-form");
+      const registerForm = document.getElementById("register-form");
+      const loginBtn = document.getElementById("mode-login-btn");
+      const registerBtn = document.getElementById("mode-register-btn");
+
+      if (mode === "login") {
+        loginForm.classList.remove("hidden");
+        registerForm.classList.add("hidden");
+        loginBtn.classList.add("active");
+        registerBtn.classList.remove("active");
+      } else {
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+        loginBtn.classList.remove("active");
+        registerBtn.classList.add("active");
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const identifier = document.getElementById("login-identifier").value.trim().toLowerCase();
+      const password = document.getElementById("login-password").value;
+
+      const user = state.users.find(u =>
+        ((u.email && u.email.toLowerCase() === identifier) ||
+         (u.phone && u.phone.toLowerCase() === identifier)) &&
+        u.password === password
+      );
+
+      if (!user) {
+        showToast("Credenciales incorrectas. Verifica tu correo/teléfono y contraseña.");
+        return;
+      }
+
+      state.session = { userId: user.id, role: user.role };
+      if (user.role === "driver") {
+        state.activeDriverId = user.id;
+      }
+      addLog("Acceso", `${user.name} (${roleLabel(user.role)}) inició sesión.`);
+      saveState();
+      renderAll();
+      showToast(`Bienvenido, ${user.name}`);
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById("reg-name").value.trim();
+      const phone = document.getElementById("reg-phone").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const plate = document.getElementById("reg-plate").value.trim().toUpperCase();
+      const password = document.getElementById("reg-password").value;
+      const car = document.getElementById("reg-model").value.trim();
+      const color = document.getElementById("reg-color").value.trim();
+
+      if (!name || !phone || !plate || !password || !car || !color) {
+        showToast("Completa todos los campos obligatorios del conductor.");
+        return;
+      }
+
+      const newId = "drv_" + Date.now();
+      const newUser = {
+        id: newId,
+        name,
+        role: "driver",
+        email: email || `${phone}@invitado.local`,
+        phone,
+        password,
+        plate,
+        car,
+        color
+      };
+
+      state.users.push(newUser);
+      state.activeDriverId = newId;
+      state.session = { userId: newId, role: "driver" };
+
+      await dispatchSms({
+        direction: "SALIENTE",
+        from: "MuéveteYa SMS",
+        to: phone,
+        text: `Registro exitoso en Jardín de Eventos. Vehículo ${car} (${plate}) vinculado a SMS.`
+      });
+
+      addLog("Registro", `Nuevo conductor ${name} registrado con placa ${plate}.`);
+      saveState();
+      document.getElementById("register-form").reset();
+      renderAll();
+      showToast("Registro completado. Bienvenido al Panel del Conductor.");
+    }
+
+    function requestLogout() {
+      document.getElementById("logout-modal").classList.remove("hidden");
+    }
+
+    function closeLogoutModal() {
+      document.getElementById("logout-modal").classList.add("hidden");
+    }
+
+    function confirmLogout() {
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        addLog("Sesión", `${currentUser.name} cerró sesión.`);
+      }
+      state.session = null;
+      saveState();
+      closeLogoutModal();
+      renderAll();
+      showToast("Sesión cerrada correctamente.");
+    }
+
+    function getCurrentUser() {
+      if (!state.session) return null;
+      return state.users.find(u => u.id === state.session.userId) || null;
+    }
+
+    function roleLabel(role) {
+      if (role === "admin") return "Administrador del Sitio";
+      if (role === "attendant") return "Encargado del Parquímetro";
+      return "Conductor";
+    }
+
+    /* =====================================================================
+       RENDERIZADO GENERAL Y MAPA AÉREO
+       ===================================================================== */
+    function renderAll() {
+      const authScreen = document.getElementById("auth-screen");
+      const appShell = document.getElementById("app-shell");
+      const currentUser = getCurrentUser();
+
+      if (!state.session || !currentUser) {
+        authScreen.classList.remove("hidden");
+        appShell.classList.add("hidden");
+        return;
+      }
+
+      authScreen.classList.add("hidden");
+      appShell.classList.remove("hidden");
+
+      document.getElementById("header-client-name").textContent = state.venueName;
+      document.getElementById("map-venue-name").textContent = state.venueName;
+      document.getElementById("session-user-label").textContent = `${currentUser.name} (${currentUser.email || currentUser.phone})`;
+      document.getElementById("session-role-badge").textContent = `PANEL: ${roleLabel(state.session.role).toUpperCase()}`;
+
+      const viewAdmin = document.getElementById("view-admin");
+      const viewDriver = document.getElementById("view-driver");
+      const viewAttendant = document.getElementById("view-attendant");
+
+      viewAttendant.classList.add("hidden");
+      viewDriver.classList.add("hidden");
+      viewAdmin.classList.add("hidden");
+
+      const mapCard = document.getElementById("shared-map-card");
+      mapCard.classList.remove("hidden");
+
+      if (state.session.role === "attendant") {
+        viewAttendant.classList.remove("hidden");
+        document.getElementById("attendant-map-slot").appendChild(mapCard);
+      } else if (state.session.role === "driver") {
+        viewDriver.classList.remove("hidden");
+        document.getElementById("driver-map-slot").appendChild(mapCard);
+      } else {
+        viewAdmin.classList.remove("hidden");
+        document.getElementById("admin-map-slot").appendChild(mapCard);
+      }
+
+      renderMap();
+      renderKpis();
+      renderInspector();
+      renderRequests();
+      renderHistory();
+      renderDriverView();
+      renderAdminView();
+
+      if (!document.getElementById("db-modal").classList.contains("hidden")) {
+        renderDbTable();
+      }
+    }
+
+    function statusBadgeClass(status) {
+      if (status === "disponible") return "bg-green";
+      if (status === "ocupado") return "bg-red";
+      if (status === "atencion") return "bg-yellow";
+      return "bg-blue";
+    }
+
+    function statusTextLabel(status) {
+      if (status === "disponible") return "Disponible";
+      if (status === "ocupado") return "Ocupado";
+      if (status === "atencion") return "Bloqueo / Atención";
+      return "Asignado";
+    }
+
+    function renderSpotButton(spot) {
+      const selected = spot.id === state.selectedSpotId ? "selected" : "";
+      const hasCar = Boolean(spot.plate);
+      return `
+        <button type="button" class="spot-btn spot-${spot.status} ${selected}" onclick="selectSpot('${spot.id}')">
+          <div class="spot-top">
+            <span class="spot-id ${statusBadgeClass(spot.status)}">${spot.id}</span>
+            <span class="spot-status-txt">${statusTextLabel(spot.status)}</span>
+          </div>
+          <div class="spot-car-row">
+            <span class="plate-tag">${hasCar ? spot.plate : "LIBRE"}</span>
+            <span class="car-color-txt">${hasCar ? `${spot.car} · ${spot.color}` : "Sin vehículo"}</span>
+          </div>
+        </button>
+      `;
+    }
+
+    function renderMap() {
+      document.getElementById("col-a-list").innerHTML = state.spots.filter(s => s.wing === "A").map(renderSpotButton).join("");
+      document.getElementById("col-c-list").innerHTML = state.spots.filter(s => s.wing === "C").map(renderSpotButton).join("");
+      document.getElementById("col-b-list").innerHTML = state.spots.filter(s => s.wing === "B").map(renderSpotButton).join("");
+    }
+
+    function renderKpis() {
+      const counts = { disponible: 0, ocupado: 0, atencion: 0, asignado: 0 };
+      state.spots.forEach(s => {
+        if (counts[s.status] !== undefined) counts[s.status]++;
+      });
+      const activeReqs = state.requests.filter(r => r.status === "pendiente").length;
+
+      document.getElementById("kpi-disponible").textContent = counts.disponible;
+      document.getElementById("kpi-ocupado").textContent = counts.ocupado;
+      document.getElementById("kpi-atencion").textContent = counts.atencion;
+      document.getElementById("kpi-asignado").textContent = counts.asignado;
+      document.getElementById("kpi-solicitudes").textContent = activeReqs;
+    }
+
+    function selectSpot(spotId) {
+      state.selectedSpotId = spotId;
+      saveState();
+      renderMap();
+      renderInspector();
+    }
+
+    /* =====================================================================
+       INSPECTOR DE ESPACIO
+       ===================================================================== */
+    function renderInspector() {
+      const spot = state.spots.find(s => s.id === state.selectedSpotId) || state.spots[0];
+      document.getElementById("inspector-spot-pill").textContent = `${spot.id} · ${statusTextLabel(spot.status)}`;
+
+      document.getElementById("inspector-body").innerHTML = `
+        <div class="info-box" style="margin-bottom:12px;">
+          <div class="info-row"><span>Cajón / Zona</span><strong>${spot.id} (Ala ${spot.wing})</strong></div>
+          <div class="info-row"><span>Estado actual</span><strong>${statusTextLabel(spot.status)}</strong></div>
+          <div class="info-row"><span>Placa</span><strong>${spot.plate || "—"}</strong></div>
+          <div class="info-row"><span>Vehículo</span><strong>${spot.car ? `${spot.car} (${spot.color})` : "—"}</strong></div>
+          <div class="info-row"><span>Conductor / Tel</span><strong>${spot.driverName ? `${spot.driverName} · ${spot.phone}` : "—"}</strong></div>
+        </div>
+
+        <div class="form-label" style="margin-bottom:4px;">Cambiar estado del espacio:</div>
+        <div class="status-btn-grid">
+          <button type="button" class="btn btn-green btn-sm" onclick="setSpotStatus('${spot.id}', 'disponible')">Disponible</button>
+          <button type="button" class="btn btn-dark btn-sm" style="border-color:var(--red);" onclick="setSpotStatus('${spot.id}', 'ocupado')">Ocupado</button>
+          <button type="button" class="btn btn-amber btn-sm" onclick="setSpotStatus('${spot.id}', 'atencion')">Atención</button>
+          <button type="button" class="btn btn-blue btn-sm" onclick="setSpotStatus('${spot.id}', 'asignado')">Asignado</button>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border-subtle); margin:14px 0;" />
+
+        <form onsubmit="saveSpotVehicle(event, '${spot.id}')">
+          <div style="font-size:12px; font-weight:800; margin-bottom:8px; color:var(--accent-light);">
+            Asignar / Actualizar vehículo en ${spot.id}
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Placa</label>
+              <input type="text" id="insp-plate" class="form-control" value="${spot.plate || ""}" placeholder="XYZ-123" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Modelo / Auto</label>
+              <input type="text" id="insp-car" class="form-control" value="${spot.car || ""}" placeholder="March" />
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Color</label>
+              <input type="text" id="insp-color" class="form-control" value="${spot.color || ""}" placeholder="Blanco" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono SMS</label>
+              <input type="text" id="insp-phone" class="form-control" value="${spot.phone || ""}" placeholder="5512345678" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Conductor</label>
+            <input type="text" id="insp-driver" class="form-control" value="${spot.driverName || ""}" placeholder="Nombre del conductor" />
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="submit" class="btn btn-amber btn-sm" style="flex:1;">Guardar en ${spot.id}</button>
+            <button type="button" class="btn btn-dark btn-sm" onclick="clearSpot('${spot.id}')">Liberar</button>
+          </div>
+        </form>
+      `;
+    }
+
+    function setSpotStatus(spotId, newStatus) {
+      const spot = state.spots.find(s => s.id === spotId);
+      if (!spot) return;
+      spot.status = newStatus;
+      if (newStatus === "disponible") {
+        spot.plate = "";
+        spot.car = "";
+        spot.color = "";
+        spot.driverName = "";
+        spot.phone = "";
+      }
+      addLog("Parquímetro", `Cajón ${spot.id} marcado como ${statusTextLabel(newStatus)}.`);
+      saveState();
+      renderAll();
+      showToast(`Cajón ${spot.id} → ${statusTextLabel(newStatus)}`);
+    }
+
+    function saveSpotVehicle(e, spotId) {
+      e.preventDefault();
+      const spot = state.spots.find(s => s.id === spotId);
+      if (!spot) return;
+      spot.plate = document.getElementById("insp-plate").value.trim().toUpperCase();
+      spot.car = document.getElementById("insp-car").value.trim();
+      spot.color = document.getElementById("insp-color").value.trim();
+      spot.phone = document.getElementById("insp-phone").value.trim();
+      spot.driverName = document.getElementById("insp-driver").value.trim();
+      if (spot.plate && spot.status === "disponible") {
+        spot.status = "ocupado";
+      }
+      addLog("Parquímetro", `Datos actualizados en ${spot.id} (${spot.plate || "sin placa"}).`);
+      saveState();
+      renderAll();
+      showToast(`Datos guardados en ${spot.id}`);
+    }
+
+    function clearSpot(spotId) {
+      setSpotStatus(spotId, "disponible");
+    }
+
+    /* =====================================================================
+       SOLICITUDES DE MOVIMIENTO Y CICLO SMS DE 5 MINUTOS
+       ===================================================================== */
+    function renderRequests() {
+      const container = document.getElementById("sms-requests-body");
+      const pending = state.requests.filter(r => r.status === "pendiente");
+
+      if (pending.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted);">No hay solicitudes de movimiento SMS pendientes.</div>`;
+        return;
+      }
+
+      container.innerHTML = pending.map(req => {
+        const isCritical = req.minutesElapsed >= 5 || req.escalated;
+        return `
+          <div class="req-card ${isCritical ? "critical" : ""}">
+            <div class="sms-bubble">
+              <div class="sms-meta">
+                <span>${req.id} · Cajón ${req.spotId}</span>
+                <span>${isCritical ? "🚨 ESCALADO (5+ min)" : `⏱️ ${req.minutesElapsed} min`}</span>
+              </div>
+              <div><strong>${req.driverName}</strong> (${req.plate} · Tel: ${req.phone || "N/A"}): "${req.message}"</div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-amber btn-sm" onclick="advanceRequestCycle('${req.id}')">
+                +5 min / Escalar SMS
+              </button>
+              <button type="button" class="btn btn-green btn-sm" onclick="resolveRequest('${req.id}', true)">
+                Resolver y liberar ${req.spotId}
+              </button>
+              <button type="button" class="btn btn-dark btn-sm" onclick="resolveRequest('${req.id}', false)">
+                Cerrar solicitud
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function advanceRequestCycle(reqId) {
+      const req = state.requests.find(r => r.id === reqId);
+      if (!req) return;
+      req.minutesElapsed += 5;
+      req.escalated = true;
+
+      await dispatchSms({
+        direction: "SALIENTE",
+        from: "MuéveteYa SMS",
+        to: req.phone || "Conductor",
+        text: `AVISO URGENTE (5 min): Se solicita mover vehículo ${req.plate} en cajón ${req.spotId}.`
+      });
+
+      addLog("Escalamiento SMS", `Solicitud ${req.id} escalada a ${req.minutesElapsed} min y SMS enviado a ${req.phone || "conductor"}.`);
+      saveState();
+      renderAll();
+      showToast(`SMS de escalamiento enviado (${req.minutesElapsed} min)`);
+    }
+
+    async function resolveRequest(reqId, freeSpot) {
+      const req = state.requests.find(r => r.id === reqId);
+      if (!req) return;
+      req.status = "resuelta";
+
+      if (freeSpot) {
+        const spot = state.spots.find(s => s.id === req.spotId);
+        if (spot) {
+          spot.status = "disponible";
+          spot.plate = "";
+          spot.car = "";
+          spot.color = "";
+          spot.driverName = "";
+          spot.phone = "";
+        }
+      }
+
+      if (req.phone) {
+        await dispatchSms({
+          direction: "SALIENTE",
+          from: "MuéveteYa SMS",
+          to: req.phone,
+          text: `MuéveteYa: Solicitud ${req.id} atendida${freeSpot ? ` y cajón ${req.spotId} liberado` : ""}.`
+        });
+      }
+
+      addLog("Resolución", `Solicitud ${req.id} resuelta${freeSpot ? ` (cajón ${req.spotId} liberado)` : ""}.`);
+      saveState();
+      renderAll();
+      showToast(`Solicitud ${req.id} resuelta`);
+    }
+
+    function scrollToSms() {
+      const el = document.getElementById("sms-center-card");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+
+    /* =====================================================================
+       VISTA DEL CONDUCTOR
+       ===================================================================== */
+    function getDrivers() {
+      return state.users.filter(u => u.role === "driver");
+    }
+
+    function renderDriverView() {
+      const drivers = getDrivers();
+      if (!drivers.length) return;
+
+      const active = drivers.find(d => d.id === state.activeDriverId) || drivers[0];
+      state.activeDriverId = active.id;
+
+      const badge = document.getElementById("twilio-status-badge");
+      if (badge) {
+        badge.textContent = state.twilioWebhookUrl ? "Twilio Conectado" : "SMS Local / Listo";
+      }
+
+      const selector = document.getElementById("driver-selector");
+      selector.innerHTML = drivers.map(d =>
+        `<option value="${d.id}" ${d.id === active.id ? "selected" : ""}>${d.name} (${d.plate || "Sin placa"})</option>`
+      ).join("");
+
+      const assignedSpot = state.spots.find(s =>
+        (active.plate && s.plate === active.plate) ||
+        (active.phone && s.phone === active.phone)
+      );
+
+      document.getElementById("driver-active-summary").innerHTML = `
+        <div class="info-row"><span>Conductor</span><strong>${active.name}</strong></div>
+        <div class="info-row"><span>Teléfono SMS</span><strong>${active.phone || "—"}</strong></div>
+        <div class="info-row"><span>Vehículo</span><strong>${active.car || "—"} (${active.color || "—"})</strong></div>
+        <div class="info-row"><span>Placa</span><strong>${active.plate || "—"}</strong></div>
+        <div class="info-row"><span>Espacio en mapa</span><strong>${assignedSpot ? `${assignedSpot.id} (${statusTextLabel(assignedSpot.status)})` : "Selecciona un cajón en el mapa"}</strong></div>
+      `;
+
+      const targetSelect = document.getElementById("sms-target-select");
+      const occupiedOrAttention = state.spots.filter(s => s.plate);
+      targetSelect.innerHTML = occupiedOrAttention.map(s =>
+        `<option value="${s.id}" ${assignedSpot && assignedSpot.id === s.id ? "selected" : ""}>Cajón ${s.id} · ${s.plate} (${s.car || "Auto"})</option>`
+      ).join("");
+
+      const inbox = document.getElementById("driver-sms-inbox");
+      const relevantSms = state.smsLogs.filter(m =>
+        !active.phone || m.to === active.phone || m.from === active.phone || m.from === "MuéveteYa SMS"
+      ).slice(0, 12);
+
+      inbox.innerHTML = relevantSms.length
+        ? relevantSms.map(m => `
+            <div class="log-item">
+              <div class="log-top">
+                <span>${m.direction} · ${m.from} → ${m.to}</span>
+                <span>${m.time} · ${m.deliveryStatus}</span>
+              </div>
+              <div>${m.text}</div>
+            </div>
+          `).join("")
+        : `<div style="font-size:12px; color:var(--text-muted);">Sin mensajes SMS aún.</div>`;
+    }
+
+    function changeActiveDriver(driverId) {
+      state.activeDriverId = driverId;
+      saveState();
+      renderDriverView();
+    }
+
+    async function driverSendSmsRequest() {
+      const drivers = getDrivers();
+      const active = drivers.find(d => d.id === state.activeDriverId) || drivers[0];
+      const spotId = document.getElementById("sms-target-select").value;
+      const customText = document.getElementById("sms-custom-text").value.trim();
+      const spot = state.spots.find(s => s.id === spotId);
+
+      const message = customText || `Solicito movimiento de vehículo en cajón ${spotId}.`;
+      const reqId = "REQ-" + Math.floor(100 + Math.random() * 900);
+
+      state.requests.unshift({
+        id: reqId,
+        spotId,
+        plate: spot && spot.plate ? spot.plate : (active.plate || "N/A"),
+        driverName: active.name,
+        phone: active.phone || "",
+        message,
+        createdAt: nowTime(),
+        minutesElapsed: 0,
+        escalated: false,
+        status: "pendiente"
+      });
+
+      await dispatchSms({
+        direction: "ENTRANTE",
+        from: active.phone || active.name,
+        to: "MuéveteYa SMS",
+        text: `[${reqId} · ${spotId}] ${message}`
+      });
+
+      await dispatchSms({
+        direction: "SALIENTE",
+        from: "MuéveteYa SMS",
+        to: active.phone || active.name,
+        text: `Confirmación SMS (${reqId}): Tu solicitud para el cajón ${spotId} ya está activa.`
+      });
+
+      if (spot && spot.status === "ocupado") {
+        spot.status = "atencion";
+      }
+
+      addLog("SMS Conductor", `${active.name} envió solicitud ${reqId} para cajón ${spotId}.`);
+      saveState();
+      document.getElementById("sms-custom-text").value = "";
+      document.getElementById("driver-last-sms-box").innerHTML = `
+        <div class="sms-bubble">
+          <div class="sms-meta"><span>SMS ENVIADO</span><span>${nowTime()}</span></div>
+          <div>${message}</div>
+        </div>
+      `;
+      renderAll();
+      showToast(`Solicitud SMS ${reqId} enviada.`);
+    }
+
+    /* =====================================================================
+       VISTA DEL ADMINISTRADOR (EDITAR CONTRASEÑAS Y TWILIO)
+       ===================================================================== */
+    function renderAdminView() {
+      const webhookInput = document.getElementById("twilio-webhook-url");
+      if (webhookInput) webhookInput.value = state.twilioWebhookUrl || "";
+
+      const select = document.getElementById("admin-user-select");
+      const currentVal = select.value || (state.users[0] && state.users[0].id);
+
+      select.innerHTML = state.users.map(u =>
+        `<option value="${u.id}" ${u.id === currentVal ? "selected" : ""}>${u.name} — ${roleLabel(u.role)} (${u.email || u.phone})</option>`
+      ).join("");
+
+      syncSelectedAdminUser();
+
+      const tbody = document.getElementById("admin-users-tbody");
+      tbody.innerHTML = state.users.map(u => `
+        <tr>
+          <td><strong>${u.name}</strong></td>
+          <td>${roleLabel(u.role)}</td>
+          <td>${u.email || u.phone}</td>
+          <td><code>${u.password}</code></td>
+        </tr>
+      `).join("");
+
+      const smsFeed = document.getElementById("admin-sms-feed");
+      smsFeed.innerHTML = state.smsLogs.slice(0, 15).map(m => `
+        <div class="log-item">
+          <div class="log-top">
+            <span>${m.direction} · ${m.from} → ${m.to}</span>
+            <span>${m.time} · ${m.deliveryStatus}</span>
+          </div>
+          <div>${m.text}</div>
+        </div>
+      `).join("");
+    }
+
+    function syncSelectedAdminUser() {
+      const userId = document.getElementById("admin-user-select").value;
+      const u = state.users.find(item => item.id === userId);
+      const box = document.getElementById("admin-selected-user-info");
+      if (!u || !box) return;
+      box.innerHTML = `
+        <div class="info-row"><span>Usuario</span><strong>${u.name}</strong></div>
+        <div class="info-row"><span>Rol</span><strong>${roleLabel(u.role)}</strong></div>
+        <div class="info-row"><span>Correo / Teléfono</span><strong>${u.email || u.phone}</strong></div>
+        <div class="info-row"><span>Contraseña actual</span><strong>${u.password}</strong></div>
+      `;
+    }
+
+    async function adminUpdatePassword(e) {
+      e.preventDefault();
+      const userId = document.getElementById("admin-user-select").value;
+      const newPass = document.getElementById("admin-new-password").value;
+      const confirmPass = document.getElementById("admin-confirm-password").value;
+
+      if (newPass.length < 3) {
+        showToast("La nueva contraseña debe tener al menos 3 caracteres.");
+        return;
+      }
+      if (newPass !== confirmPass) {
+        showToast("Las contraseñas no coinciden.");
+        return;
+      }
+
+      const user = state.users.find(u => u.id === userId);
+      if (!user) return;
+
+      user.password = newPass;
+      if (user.phone) {
+        await dispatchSms({
+          direction: "SALIENTE",
+          from: "MuéveteYa SMS",
+          to: user.phone,
+          text: `MuéveteYa: El administrador ha actualizado la contraseña de tu cuenta.`
+        });
+      }
+
+      addLog("Seguridad", `Contraseña actualizada para ${user.name} (${roleLabel(user.role)}).`);
+      saveState();
+      document.getElementById("admin-new-password").value = "";
+      document.getElementById("admin-confirm-password").value = "";
+      renderAdminView();
+      showToast(`Contraseña actualizada para ${user.name}`);
+    }
+
+    function saveTwilioWebhook() {
+      const url = document.getElementById("twilio-webhook-url").value.trim();
+      state.twilioWebhookUrl = url;
+      addLog("Twilio SMS", url ? `Webhook Twilio configurado: ${url}` : "Webhook Twilio limpiado (modo local).");
+      saveState();
+      renderAll();
+      showToast(url ? "URL de Twilio guardada." : "Modo SMS local activado.");
+    }
+
+    /* =====================================================================
+       HISTORIAL, BASE DE DATOS Y REINICIO
+       ===================================================================== */
+    function renderHistory() {
+      const feed = document.getElementById("history-feed");
+      feed.innerHTML = state.logs.slice(0, 18).map(l => `
+        <div class="log-item">
+          <div class="log-top">
+            <span>${l.actor}</span>
+            <span>${l.time}</span>
+          </div>
+          <div>${l.text}</div>
+        </div>
+      `).join("");
+    }
+
+    function openDbModal() {
+      document.getElementById("db-modal").classList.remove("hidden");
+      renderDbTable();
+    }
+
+    function closeDbModal() {
+      document.getElementById("db-modal").classList.add("hidden");
+    }
+
+    function setDbTab(tab) {
+      state.activeDbTab = tab;
+      ["spots", "requests", "sms_logs", "users", "logs"].forEach(t => {
+        const btn = document.getElementById("dbtab-" + t);
+        if (btn) btn.classList.toggle("active", t === tab);
+      });
+      renderDbTable();
+    }
+
+    function renderDbTable() {
+      const container = document.getElementById("db-table-container");
+      const tab = state.activeDbTab;
+
+      if (tab === "spots") {
+        container.innerHTML = `
+          <table>
+            <thead><tr><th>Cajón</th><th>Ala</th><th>Estado</th><th>Placa</th><th>Vehículo</th><th>Conductor</th></tr></thead>
+            <tbody>
+              ${state.spots.map(s => `
+                <tr>
+                  <td><strong>${s.id}</strong></td>
+                  <td>${s.wing}</td>
+                  <td>${statusTextLabel(s.status)}</td>
+                  <td>${s.plate || "—"}</td>
+                  <td>${s.car ? `${s.car} (${s.color})` : "—"}</td>
+                  <td>${s.driverName || "—"}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } else if (tab === "requests") {
+        container.innerHTML = `
+          <table>
+            <thead><tr><th>ID</th><th>Cajón</th><th>Placa</th><th>Conductor</th><th>Min</th><th>Estado</th><th>Mensaje</th></tr></thead>
+            <tbody>
+              ${state.requests.map(r => `
+                <tr>
+                  <td><strong>${r.id}</strong></td>
+                  <td>${r.spotId}</td>
+                  <td>${r.plate}</td>
+                  <td>${r.driverName}</td>
+                  <td>${r.minutesElapsed}</td>
+                  <td>${r.status}</td>
+                  <td>${r.message}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } else if (tab === "sms_logs") {
+        container.innerHTML = `
+          <table>
+            <thead><tr><th>ID</th><th>Tipo</th><th>De</th><th>Para</th><th>Hora</th><th>Mensaje</th></tr></thead>
+            <tbody>
+              ${state.smsLogs.map(m => `
+                <tr>
+                  <td><strong>${m.id}</strong></td>
+                  <td>${m.direction}</td>
+                  <td>${m.from}</td>
+                  <td>${m.to}</td>
+                  <td>${m.time}</td>
+                  <td>${m.text}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } else if (tab === "users") {
+        container.innerHTML = `
+          <table>
+            <thead><tr><th>ID</th><th>Nombre</th><th>Rol</th><th>Correo</th><th>Teléfono</th><th>Contraseña</th></tr></thead>
+            <tbody>
+              ${state.users.map(u => `
+                <tr>
+                  <td>${u.id}</td>
+                  <td><strong>${u.name}</strong></td>
+                  <td>${roleLabel(u.role)}</td>
+                  <td>${u.email || "—"}</td>
+                  <td>${u.phone || "—"}</td>
+                  <td><code>${u.password}</code></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      } else {
+        container.innerHTML = `
+          <table>
+            <thead><tr><th>Hora</th><th>Actor</th><th>Evento</th></tr></thead>
+            <tbody>
+              ${state.logs.map(l => `
+                <tr>
+                  <td>${l.time}</td>
+                  <td><strong>${l.actor}</strong></td>
+                  <td>${l.text}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+    }
+
+    function resetPrototype() {
+      const fresh = createInitialState();
+      fresh.session = state.session;
+      fresh.twilioWebhookUrl = state.twilioWebhookUrl;
+      state = fresh;
+      addLog("Sistema", "Foto inicial del estacionamiento restaurada.");
+      saveState();
+      renderAll();
+      showToast("Foto inicial restaurada.");
+    }
+
+    async function dispatchSms(payload) {
+      const entry = {
+        id: "SMS-" + Math.floor(1000 + Math.random() * 9000),
+        direction: payload.direction || "SALIENTE",
+        from: payload.from || "MuéveteYa SMS",
+        to: payload.to || "Conductor",
+        text: payload.text || "",
+        time: typeof nowTime === "function" ? nowTime() : new Date().toLocaleTimeString(),
+        deliveryStatus: "Registrado"
+      };
+
+      const digitosDestino = String(entry.to).replace(/\D/g, "");
+      const pareceTelefono = digitosDestino.length >= 10;
+
+      if (entry.direction === "SALIENTE" && pareceTelefono) {
+        entry.deliveryStatus = "Enviando...";
+        try {
+          const resp = await fetch("/api/enviar-sms", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              telefono: entry.to,
+              mensajePersonalizado: entry.text
+            })
+          });
+
+          const data = await resp.json();
+
+          if (resp.ok && data.exito) {
+            entry.deliveryStatus = `Enviado Twilio (${String(data.sid).slice(-6)})`;
+            if (typeof showToast === "function") {
+              showToast(`✅ SMS real enviado a ${entry.to}`);
+            }
+          } else {
+            entry.deliveryStatus = "Error Twilio";
+            console.warn("Twilio devolvió error:", data.error);
+            if (typeof showToast === "function") {
+              showToast(`⚠️ SMS local guardado, pero Twilio falló: ${data.error}`);
+            }
+          }
+        } catch (err) {
+          entry.deliveryStatus = "Sin servidor (Local)";
+          console.error("No se pudo conectar a http://localhost:3000:", err);
+          if (typeof showToast === "function") {
+            showToast("⚠️ Sin conexión a localhost:3000 (revisa 'node server.js')");
+          }
+        }
+      } else if (entry.direction === "SALIENTE") {
+        entry.deliveryStatus = "Sin teléfono válido";
+      }
+
+      if (typeof state !== "undefined" && Array.isArray(state.smsLogs)) {
+        state.smsLogs.unshift(entry);
+      }
+
+      return entry;
+    }
+
+    /* =====================================================================
+       SOLICITUDES DE MOVIMIENTO Y CICLO SMS DE 5 MINUTOS
+       ===================================================================== */
+    function renderRequests() {
+      const container = document.getElementById("sms-requests-body");
+      const pending = state.requests.filter(r => r.status === "pendiente");
+
+      if (pending.length === 0) {
+        container.innerHTML = `<div style="font-size:12px; color:var(--text-muted);">No hay solicitudes de movimiento SMS pendientes.</div>`;
+        return;
+      }
+
+      container.innerHTML = pending.map(req => {
+        const isCritical = req.minutesElapsed >= 5 || req.escalated;
+        return `
+          <div class="req-card ${isCritical ? "critical" : ""}">
+            <div class="sms-bubble">
+              <div class="sms-meta">
+                <span>${req.id} · Cajón ${req.spotId}</span>
+                <span>${isCritical ? "🚨 ESCALADO (5+ min)" : `⏱️ ${req.minutesElapsed} min`}</span>
+              </div>
+              <div><strong>${req.driverName}</strong> (${req.plate} · Tel: ${req.phone || "N/A"}): "${req.message}"</div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-amber btn-sm" onclick="advanceRequestCycle('${req.id}')">
+                +5 min / Escalar SMS
+              </button>
+              <button type="button" class="btn btn-green btn-sm" onclick="resolveRequest('${req.id}', true)">
+                Resolver y liberar ${req.spotId}
+              </button>
+              <button type="button" class="btn btn-dark btn-sm" onclick="resolveRequest('${req.id}', false)">
+                Cerrar solicitud
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function advanceRequestCycle(reqId) {
+      const req = state.requests.find(r => r.id === reqId);
+      if (!req) return;
+      req.minutesElapsed += 5;
+      req.escalated = true;
+
+      await dispatchSms({
+        direction: "SALIENTE",
+        from: "MuéveteYa SMS",
+        to: req.phone || "Conductor",
+        text: `AVISO URGENTE (5 min): Se solicita mover vehículo ${req.plate} en cajón ${req.spotId}.`
+      });
+
+      addLog("Escalamiento SMS", `Solicitud ${req.id} escalada a ${req.minutesElapsed} min y SMS enviado a ${req.phone || "conductor"}.`);
+      saveState();
+      renderAll();
+      showToast(`SMS de escalamiento enviado (${req.minutesElapsed} min)`);
+    }
+
+    async function resolveRequest(reqId, freeSpot) {
+      const req = state.requests.find(r => r.id === reqId);
+      if (!req) return;
+      req.status = "resuelta";
+
+      if (freeSpot) {
+        const spot = state.spots.find(s => s.id === req.spotId);
+        if (spot) {
+          spot.status = "disponible";
+          spot.plate = "";
+          spot.car = "";
+          spot.color = "";
+          spot.driverName = "";
+          spot.phone = "";
+        }
+      }
+
+      if (req.phone) {
+        await dispatchSms({
+          direction: "SALIENTE",
+          from: "MuéveteYa SMS",
+          to: req.phone,
+          text: `MuéveteYa: Solicitud ${req.id} atendida${freeSpot ? ` y cajón ${req.spotId} liberado` : ""}.`
+        });
+      }
+
+      addLog("Resolución", `Solicitud ${req.id} resuelta${freeSpot ? ` (cajón ${req.spotId} liberado)` : ""}.`);
+      saveState();
+      renderAll();
+      showToast(`Solicitud ${req.id} resuelta`);
+    }
+
+    function scrollToSms() {
+      const el = document.getElementById("sms-center-card");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+
+    /* =====================================================================
+       VISTA DEL CONDUCTOR
+       ===================================================================== */
+    function getDrivers() {
+      return state.users.filter(u => u.role === "driver");
+    }
+
+    function renderDriverView() {
+      const drivers = getDrivers();
+      if (!drivers.length) return;
+
+      const active = drivers.find(d => d.id === state.activeDriverId) || drivers[0];
+      state.activeDriverId = active.id;
+
+      const badge = document.getElementById("twilio-status-badge");
+      if (badge) {
+        badge.textContent = state.twilioWebhookUrl ? "Twilio Conectado" : "SMS Local / Listo";
+      }
+
+      const selector = document.getElementById("driver-selector");
+      selector.innerHTML = drivers.map(d =>
+        `<option value="${d.id}" ${d.id === active.id ? "selected" : ""}>${d.name} (${d.plate || "Sin placa"})</option>`
+      ).join("");
+
+      const assignedSpot = state.spots.find(s =>
+        (active.plate && s.plate === active.plate) ||
+        (active.phone && s.phone === active.phone)
+      );
+
+      document.getElementById("driver-active-summary").innerHTML = `
+        <div class="info-row"><span>Conductor</span><strong>${active.name}</strong></div>
+        <div class="info-row"><span>Teléfono SMS</span><strong>${active.phone || "—"}</strong></div>
+        <div class="info-row"><span>Vehículo</span><strong>${active.car || "—"} (${active.color || "—"})</strong></div>
+        <div class="info-row"><span>Placa</span><strong>${active.plate || "—"}</strong></div>
+        <div class="info-row"><span>Espacio en mapa</span><strong>${assignedSpot ? `${assignedSpot.id} (${statusTextLabel(assignedSpot.status)})` : "Selecciona un cajón en el mapa"}</strong></div>
+      `;
+
+      const targetSelect = document.getElementById("sms-target-select");
+      const occupiedOrAttention = state.spots.filter(s => s.plate);
+      targetSelect.innerHTML = occupiedOrAttention.map(s =>
+        `<option value="${s.id}" ${assignedSpot && assignedSpot.id === s.id ? "selected" : ""}>Cajón ${s.id} · ${s.plate} (${s.car || "Auto"})</option>`
+      ).join("");
+
+      const inbox = document.getElementById("driver-sms-inbox");
+      const relevantSms = state.smsLogs.filter(m =>
+        !active.phone || m.to === active.phone || m.from === active.phone || m.from === "MuéveteYa SMS"
+      ).slice(0, 12);
+
+      inbox.innerHTML = relevantSms.length
+        ? relevantSms.map(m => `
+            <div class="log-item">
+              <div class="log-top">
+                <span>${m.direction} · ${m.from} → ${m.to}</span>
+                <span>${m.time} · ${m.deliveryStatus}</span>
+              </div>
+              <div>${m.text}</div>
+            </div>
+          `).join("")
+        : `<div style="font-size:12px; color:var(--text-muted);">Sin mensajes SMS aún.</div>`;
+    }
+
+    function changeActiveDriver(driverId) {
+      state.activeDriverId = driverId;
+      saveState();
+      renderDriverView();
+    }
+
+    async function driverSendSmsRequest() {
+      const drivers = getDrivers();
+      const active = drivers.find(d => d.id === state.activeDriverId) || drivers[0];
+      const spotId = document.getElementById("sms-target-select").value;
+      const customText = document.getElementById("sms-custom-text").value.trim();
+      const spot = state.spots.find(s => s.id === spotId);
+
+      const message = customText || `Solicito movimiento de vehículo en cajón ${spotId}.`;
+      const reqId = "REQ-" + Math.floor(100 + Math.random() * 900);
+
+      state.requests.unshift({
+        id: reqId,
+        spotId,
+        plate: spot && spot.plate ? spot.plate : (active.plate || "N/A"),
+        driverName: active.name,
+        phone: active.phone || "",
+        message,
+        createdAt: nowTime(),
+        minutesElapsed: 0,
+        escalated: false,
+        status: "pendiente"
+      });
+
+      await dispatchSms({
+        direction: "ENTRANTE",
+        from: active.phone || active.name,
+        to: "MuéveteYa SMS",
+        text: `[${reqId} · ${spotId}] ${message}`
+      });
+
+      await dispatchSms({
+        direction: "SALIENTE",
+        from: "MuéveteYa SMS",
+        to: active.phone || active.name,
+        text: `Confirmación SMS (${reqId}): Tu solicitud para el cajón ${spotId} ya está activa.`
+      });
+
+      if (spot && spot.phone && spot.phone !== active.phone) {
+        await dispatchSms({
+          direction: "SALIENTE",
+          from: "MuéveteYa SMS",
+          to: spot.phone,
+          text: `MuéveteYa (${reqId}): Solicitan mover tu vehículo placa ${spot.plate} en cajón ${spot.id}. Motivo: ${message}`
+        });
+      }
+
+      if (spot && spot.status === "ocupado") {
+        spot.status = "atencion";
+      }
+
+      addLog("SMS Conductor", `${active.name} envió solicitud ${reqId} para cajón ${spotId}.`);
+      saveState();
+      document.getElementById("sms-custom-text").value = "";
+      document.getElementById("driver-last-sms-box").innerHTML = `
+        <div class="sms-bubble">
+          <div class="sms-meta"><span>SMS ENVIADO</span><span>${nowTime()}</span></div>
+          <div>${message}</div>
+        </div>
+      `;
+      renderAll();
+      showToast(`Solicitud SMS ${reqId} enviada.`);
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
